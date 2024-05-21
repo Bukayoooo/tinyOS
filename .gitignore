@@ -1,6 +1,0 @@
-*.bin
-*.elf
-*.txt
-*.map
-.settings
-build*
