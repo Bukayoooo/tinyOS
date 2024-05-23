@@ -9,7 +9,7 @@ __memset_16bytes_asm:
 
 .loop:
         sd a1, (a0)             /* store first 8 bytes */
-        sd a1, 8(a0)    /* store second 8 bytes */
+        sd a1, 8(a0)            /* store second 8 bytes */
         addi t0, t0, 16
         addi a0, a0, 16
         blt t0, a2, .loop

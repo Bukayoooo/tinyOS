@@ -3,7 +3,7 @@
 my_test_data:
     .dword 0x123456789abcd
 
-.globl load_store_test      /* target remote localhost:1234 */
+.global load_store_test      
 load_store_test:
     li a0, 0x80200000
     li a1, 16
