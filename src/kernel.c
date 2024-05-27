@@ -1,18 +1,16 @@
 #include "uart.h"
 #include "memset.h"
 
-int add_c(int a, int b)
+extern void load_store_test(void);
+extern void load_test(void);
+extern void memcpy_test(void);
+
+void asm_test()
 {
-	return a + b;
-}
+	load_store_test();
+	memcpy_test();
+	memset_test((void *)0x80210005, 0x88, 40);
 
-
-int func1(void)
-{
-	int a = 1;
-	int b = 2;
-
-	return add_c(a, b);
 }
 
 
@@ -22,7 +20,7 @@ void kernel_main(void)
 	uart_init();
 	uart_send_string("Welcome RISC-V!\r\n");
 
-	func1();
+	asm_test();
 
 	while (1) {
 		;
