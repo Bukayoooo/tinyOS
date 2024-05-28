@@ -1,6 +1,13 @@
 #include "asm/uart.h"
 #include "io.h"
 
+void putchar(char c)
+{
+       if (c == '\n')
+               uart_send('\r');
+       uart_send(c);
+}
+
 void uart_send(char c)
 {
 	while((readb(UART_LSR) & UART_LSR_EMPTY) == 0)

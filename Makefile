@@ -1,6 +1,6 @@
 GNU ?= riscv64-linux-gnu
 
-COPS += -save-temps=obj -g -O0 -Wall -nostdlib -nostdinc -Iinclude -mcmodel=medany -mabi=lp64 -march=rv64imafd -fno-PIE -fno-omit-frame-pointer
+COPS += -save-temps=obj -g -O0 -Wall -nostdlib -Iinclude -mcmodel=medany -mabi=lp64 -march=rv64imafd -fno-PIE -fno-omit-frame-pointer -Wbuiltin-declaration-mismatch
 
 board ?= qemu
 
