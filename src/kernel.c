@@ -1,8 +1,10 @@
 #include "uart.h"
 #include "memset.h"
+#include "printk.h"
 
 int add_c(int a, int b)
 {
+	dump_stack();
 	return a + b;
 }
 
@@ -21,6 +23,7 @@ void kernel_main(void)
 {
 	uart_init();
 	uart_send_string("Welcome RISC-V!\r\n");
+	init_printk_done();
 
 	func1();
 

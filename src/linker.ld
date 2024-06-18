@@ -9,7 +9,7 @@ SECTIONS
 	.text.boot : { *(.text.boot) }
 
 	/* text代码段 */
-	. = .ALIGN(8)
+	. = ALIGN(8);
 	_text = .;		/* text段开始 */
 	.text : { *(.text) }
 	_etext = .;		/* text段结束 */
