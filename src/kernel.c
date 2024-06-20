@@ -1,5 +1,6 @@
 #include "uart.h"
 #include "memset.h"
+#include "asm/sbi.h"
 
 extern void load_store_test(void);
 extern void load_test(void);
@@ -19,6 +20,7 @@ void kernel_main(void)
 {
 	// uart_init();
 	// uart_send_string("Welcome RISC-V!\r\n");
+	sbi_putstring("Welcome RISC-V!\r\n");
 
 	asm_test();
 

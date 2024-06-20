@@ -1,6 +1,10 @@
 #include "asm/csr.h"
+#include "uart.h"
+
 
 #define FW_JUMP_ADDR 0x80200000
+
+extern void sbi_trap_init();
 
 /*
  * 运行在M模式
@@ -8,6 +12,9 @@
 void sbi_main(void)
 {
 	unsigned long val;
+	
+	/* initial exception settings, set the exception vector table address */
+	sbi_trap_init();
 
 	/* 设置跳转模式为S模式 */
 	val = read_csr(mstatus);
