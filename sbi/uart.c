@@ -4,7 +4,7 @@
 void uart_send(char c)
 {
 	while((readb(UART_LSR) & UART_LSR_EMPTY) == 0)
-		;
+			;
 
 	writeb(c, UART_DAT);
 }
@@ -14,8 +14,18 @@ void uart_send_string(char *str)
 	int i;
 
 	for (i = 0; str[i] != '\0'; i++)
-		uart_send((char) str[i]);
+			uart_send((char) str[i]);
 }
+
+void putchar(char c)
+{
+	if(c == '\n')
+	{
+			uart_send('\r');
+	}
+	uart_send(c);
+}
+
 
 static unsigned int uart16550_clock = 1843200;   // a common base clock
 #define UART_DEFAULT_BAUD  115200

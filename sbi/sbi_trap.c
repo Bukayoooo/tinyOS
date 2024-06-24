@@ -1,6 +1,8 @@
 #include "sbi_trap.h"
 #include "uart.h"
 #include "asm/csr.h"
+#include "sbi_trap_regs.h"
+#include "asm/sbi.h"
 
 
 /* disable vscode error */
@@ -16,9 +18,47 @@ void sbi_trap_init()
     write_csr(mie, 0x0);
 }
 
-void sbi_trap_handler()
+/**
+ * int ecall_id: 系统调用号
+ * struct sbi_trap_regs *regs：寄存器
+ */
+int sbi_ecall_handle(int ecall_id, struct sbi_trap_regs *regs)
 {
-    uart_init();
-	uart_send_string("Welcome RISC-V!\r\n");
+    int ret = 0;
+
+    switch(ecall_id)
+    {
+            case SBI_CONSOLE_PUTCHAR:
+                    putchar(regs->a0);
+                    ret = 0;
+                    break;
+    }
+
+    if(!ret)
+    {
+            // mret 返回异常发生的下一条指令
+            regs->mepc += 4;
+    }
+
+    return ret;
+}
+
+/**
+ * struct sbi_trap_regs *regs: 保存在栈中的寄存器值
+ */
+void sbi_trap_handler(struct sbi_trap_regs *regs)
+{
+
+    unsigned long mcause = read_csr(mcause);
+    int ecall_id = regs->a7;
+
+    switch(mcause)
+    {
+        case CAUSE_SUPERVISOR_ECALL:
+                sbi_ecall_handle(ecall_id, regs);
+                break;
+        default:
+                break;
+    }
 
 }

@@ -7,7 +7,7 @@
 
 
 /**
- * 实现ecall的sbi接口 
+ * 实现ecall的sbi接口
  * which: sbi extension id (eid -> system call id) => a7
  * arg0, arg1, arg2 => a0, a1, a2 (three params while ecall)
  */
@@ -24,7 +24,7 @@
 })
 
 /**
- * 定义宏调用SBI_ECALL 
+ * 定义宏调用SBI_ECALL
  */
 #define SBI_ECALL0(which) SBI_ECALL(which, 0, 0, 0)
 #define SBI_ECALL1(which, arg0) SBI_ECALL(which, arg0, 0, 0)
