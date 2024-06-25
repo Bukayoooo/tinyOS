@@ -6,6 +6,7 @@
 extern void load_store_test(void);
 extern void load_test(void);
 extern void memcpy_test(void);
+extern void trap_init(void);
 
 void asm_test()
 {
@@ -48,6 +49,9 @@ void kernel_main(void)
 	// uart_init();
 	// uart_send_string("Welcome RISC-V!\r\n");
 	sbi_putstring("Welcome RISC-V!\r\n");
+
+	/* 初始化S模式异常  */
+	trap_init();
 
 	init_printk_done(sbi_putchar);
 	print_mem();

@@ -1,3 +1,7 @@
+#ifndef _ASM_OFFSETS_H
+#define _ASM_OFFSETS_H
+
+/* trap_regs结构体中每个字段的偏移量 */
 
 #define PT_SIZE 264     /* sizeof(struct sbi_trap_regs) */
 #define PT_MEPC 0       /* offset(struct sbi_trap_regs, mepc) */
@@ -33,3 +37,6 @@
 #define PT_A6 240       /* offset(struct sbi_trap_regs, a6) */
 #define PT_A7 248       /* offset(struct sbi_trap_regs, a7) */
 #define PT_MSTATUS 256       /* offset(struct sbi_trap_regs, mstatus) */
+
+
+#endif /* _ASM_OFFSETS_H */
