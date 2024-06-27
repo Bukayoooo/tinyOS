@@ -47,7 +47,10 @@ struct trap_regs
     unsigned long a5;       /* x15: 函数参数 */
     unsigned long a6;       /* x16: 函数参数 */
     unsigned long a7;       /* x17: 函数参数 */
-    
-    unsigned long status;  /* M模式异常原因寄存器 */
-
+    /* Supervisor CSRs */
+    unsigned long sstatus;  /* M模式异常原因寄存器 */
+    unsigned long stvec;
+    unsigned long scause;
+    /* a0 val before exception */
+    unsigned long orig_a0;
 };
