@@ -15,6 +15,8 @@ void sbi_main(void)
 	
 	/* initial exception settings, set the exception vector table address */
 	sbi_trap_init();
+	/* 将M模式的异常委托给S模式 */
+	delegate_trap();
 
 	/* 设置跳转模式为S模式 */
 	val = read_csr(mstatus);

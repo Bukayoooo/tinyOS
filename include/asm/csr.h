@@ -12,6 +12,9 @@
 #define MSTATUS_MPP	(3UL << MSTATUS_MPP_SHIFT)
 #define MSTATUS_MPIE	0x00000080UL
 
+#define SCAUSE_INTERRUPT (1UL << 63)
+#define is_interrupt_fault(reg) (reg & SCAUSE_INTERRUPT)
+
 /*
  * 在带参数的宏，#号作为一个预处理运算符,
  * 可以把记号转换成字符串
