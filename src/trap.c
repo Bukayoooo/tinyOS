@@ -12,7 +12,7 @@ extern void do_exception_vector();
 
 struct fault_info
 {
-    int (*fn) (struct pt_regs *, const char *);
+    int (*fn) (struct trap_regs *, const char *);
     char *name;
 };
 
@@ -24,21 +24,43 @@ void panic(void)
     }
 }
 
+void print_regs(struct trap_regs *regs)
+{
+    printk("sepc:0x%016lx sstatus:0x%016lx stvec:0x%016lx\n",
+            regs->sepc, regs->sstatus, regs->stvec);
+    printk("ra:0x%016lx sp:0x%016lx gp:0x%016lx tp:0x%016lx\n",
+        regs->ra, regs->sp, regs->gp, regs->tp);
+    printk("t0:0x%016lx t1:0x%016lx t2:0x%016lx t3:0x%016lx\n",
+        regs->t0, regs->t1, regs->t2, regs->t3);
+    printk("t4:0x%016lx t5:0x%016lx t6:0x%016lx s0:0x%016lx\n",
+        regs->t4, regs->t5, regs->t6, regs->s0);
+    printk("s1:0x%016lx s2:0x%016lx s3:0x%016lx s4:0x%016lx\n",
+        regs->s1, regs->s2, regs->s3, regs->s4);
+    printk("s5:0x%016lx s6:0x%016lx s7:0x%016lx s8:0x%016lx\n",
+        regs->s5, regs->s6, regs->s7, regs->s8);
+    printk("s9:0x%016lx s10:0x%016lx s11:0x%016lx a0:0x%016lx\n",
+        regs->s9, regs->s10, regs->s11, regs->a0);
+    printk("a1:0x%016lx a2:0x%016lx a3:0x%016lx a4:0x%016lx\n",
+        regs->a1, regs->a2, regs->a3, regs->a4);
+    printk("a5:0x%016lx a6:0x%016lx a7:0x%016lx scause:0x%016lx\n",
+        regs->a5, regs->a6, regs->a7, regs->scause);
+}
+
 /**
  * 打印异常状态下寄存器信息与异常原因
  * regs: 寄存器信息
  * str：异常产生原因
  */
-static void do_trap_error(struct pt_regs *regs, const char *str)
+static void do_trap_error(struct trap_regs *regs, const char *str)
 {
     printk("Oops, %s\n", str);
-
+    print_regs(regs);
     panic();
 }
 
 
 #define DO_ERROR_INFO(name)     \
-int name(struct pt_regs *regs, const char *str)     \
+int name(struct trap_regs *regs, const char *str)     \
 {           \
     do_trap_error(regs, str);        \
     return 0;        \
@@ -80,24 +102,37 @@ static const struct fault_info fault_info[] ={
 };
 
 /**
+ * 根据异常处理原因scause查询异常处理表fault_info，以及调用异常处理函数
+ */
+const struct fault_info* ec_to_fault_info(unsigned long scause)
+{
+    return fault_info + (scause & SCAUSE_EC_NUMS);
+}
+
+/**
  * 异常处理函数
  */
 void trap_handler(struct trap_regs* regs, unsigned long scause)
 {
+
+    const struct fault_info* inf;
+
     printk("%s, scause:0x%lx\n", __func__, scause);
 
     if(is_interrupt_fault(scause)) {
         /* 中断异常 */
         // TODO
     }
-    else 
+    else
     {
         /* 普通异常 */
-        
+        inf = ec_to_fault_info(scause);
+        if(!inf->fn(regs, inf->name))
+        {
+                return;
+        }
     }
-
 }
-
 /*
  * 异常初始化
  */

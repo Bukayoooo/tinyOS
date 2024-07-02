@@ -15,6 +15,8 @@
 #define SCAUSE_INTERRUPT (1UL << 63)
 #define is_interrupt_fault(reg) (reg & SCAUSE_INTERRUPT)
 
+#define SCAUSE_EC_NUMS (0xf)    /* 目前支持15个异常 */
+
 /*
  * 在带参数的宏，#号作为一个预处理运算符,
  * 可以把记号转换成字符串
