@@ -17,13 +17,34 @@ void uart_send_string(char *str)
 			uart_send((char) str[i]);
 }
 
+char uart_get(void)
+{
+    char c;
+    if(readb(UART_LSR) & UART_LSR_DR)
+    {
+        c = readb(UART_DAT);
+    }
+    else
+    {
+        return -1;
+    }
+    return c;
+}
+
+
 void putchar(char c)
 {
 	if(c == '\n')
 	{
-			uart_send('\r');
+		uart_send('\r');
 	}
 	uart_send(c);
+}
+
+char getchar(void)
+{
+    char c = uart_get();
+    return c;
 }
 
 

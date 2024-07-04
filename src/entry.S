@@ -3,12 +3,6 @@
  * S模式异常处理入口
  */
 
-/* 异常入口：保存异常上下文 */
-.macro exception_entry
-    
-
-.endm
-
 /* 异常出口：恢复异常上下文 */
 .macro exception_exit
     ld t0, PT_SEPC(sp)

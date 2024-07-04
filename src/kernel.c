@@ -44,25 +44,48 @@ static void print_mem()
 					(unsigned long) (_ebss - _bss));
 }
 
+static void trigger_illegal_instructions(void)
+{
+	/* 获取代码段的一个函数 */
+	int *p = (int *) trigger_fault;
+	/* 篡改代码段中的指令 */
+	*p = 0xbadbeef;
+}
+
+
+
+
+
 /* target remote localhost:1234 */
 void kernel_main(void)
 {
 	// uart_init();
 	// uart_send_string("Welcome RISC-V!\r\n");
+	
+	/* 系统调用实现串口输出 */
 	sbi_putstring("Welcome RISC-V!\r\n");
 	init_printk_done(sbi_putchar);
 
 
 	/* 初始化S模式异常  */
 	trap_init();
-
 	
 	/* 打印image layout */
 	print_mem();
 
 	asm_test();
+
+	/* 触发非法指令异常 */
+	// trigger_illegal_instructions();
+
 	/* 触发地址访问异常 */
-	trigger_fault();
+	// trigger_fault();
+
+	/* 系统调用实现串口输入 */
+	sbi_inputchar();
+
+
+
 
 
 	while (1) {

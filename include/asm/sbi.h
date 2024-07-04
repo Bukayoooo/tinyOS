@@ -1,6 +1,7 @@
 #ifndef _ASM_RISCV_SBI_H
 #define _ASM_RISCV_SBI_H
 
+#include "printk.h"
 
 #define SBI_CONSOLE_PUTCHAR 0x1
 #define SBI_CONSOLE_GETCHAR 0x2
@@ -45,6 +46,33 @@ static inline void sbi_putstring(char *str)
     {
         sbi_putchar(str[i]);
     }
+}
+
+static inline char sbi_getchar(void)
+{
+    return SBI_ECALL0(SBI_CONSOLE_GETCHAR);
+}
+
+static inline isprint(char c)
+{
+    return (c >= 32 && c <= 126);
+}
+
+static inline void sbi_inputchar()
+{
+	while(1)
+	{
+		char c = sbi_getchar();
+		if(c != -1 && isprint(c))
+		{
+			printk("%c", c);
+		}
+		else if(c == '\r')
+		{
+			printk("\n");
+		}
+		
+	}
 }
 
 #endif /* _ASM_RISCV_SBI_H */

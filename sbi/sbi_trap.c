@@ -41,6 +41,10 @@ int sbi_ecall_handle(int ecall_id, struct sbi_trap_regs *regs)
             putchar(regs->a0);
             ret = 0;
             break;
+        case SBI_CONSOLE_GETCHAR:
+            regs->a0 = getchar();
+            ret = 0;
+            break;
     }
 
     if(!ret)
@@ -90,7 +94,8 @@ void delegate_trap(void)
                 (1UL << CAUSE_AMO_STORE_PAGE_FAULT) |
                 (1UL << CAUSE_USER_ECALL) |
                 (1UL << CAUSE_LOAD_ACESS) |
-                (1UL << CAUSE_AMO_STORE_ACESS);
+                (1UL << CAUSE_AMO_STORE_ACESS) |
+                (1UL << CAUSE_ILLEGAL_INSTRUCTION);
 
     write_csr(mideleg, interrupts);
     write_csr(medeleg, exceptions);
