@@ -3,8 +3,10 @@
 
 #include "printk.h"
 
-#define SBI_CONSOLE_PUTCHAR 0x1
-#define SBI_CONSOLE_GETCHAR 0x2
+/* 根据SBI规范设置系统调用号 */
+#define SBI_SET_TIMER 0x0           /* 时钟中断 */
+#define SBI_CONSOLE_PUTCHAR 0x1     /* 串口输出 */
+#define SBI_CONSOLE_GETCHAR 0x2     /* 串口输入 */
 
 
 /**
@@ -33,7 +35,7 @@
 #define SBI_ECALL3(which, arg0, arg1, arg2) SBI_ECALL(which, arg0, arg1, arg2)
 
 /**
- * 串口系统调用, 调用sbi接口M模式下打印一个字符
+ * 串口输出系统调用, 调用sbi接口M模式下打印一个字符
  */
 static inline void sbi_putchar(char c)
 {
@@ -48,14 +50,25 @@ static inline void sbi_putstring(char *str)
     }
 }
 
+/**
+ * 串口输入系统调用
+ */
 static inline char sbi_getchar(void)
 {
     return SBI_ECALL0(SBI_CONSOLE_GETCHAR);
 }
 
-static inline isprint(char c)
+static inline char isprint(char c)
 {
     return (c >= 32 && c <= 126);
+}
+
+/**
+ * 时钟中断系统调用，调用sbi接口定时打印
+ */
+static inline void sbi_set_timer(unsigned long stime_value)
+{
+    SBI_ECALL1(SBI_SET_TIMER, stime_value);
 }
 
 static inline void sbi_inputchar()

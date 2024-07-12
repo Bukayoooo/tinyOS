@@ -1,6 +1,29 @@
 #ifndef _RISCV_SBI_TRAP_H
 #define _RISCV_SBI_TRAP_H
 
+#define MCAUSE_IRQ (1UL << 63)
+
+/*************MIP寄存器字段*******************/
+#define IRQ_S_SOFT  1   /* M模式软件中断索引 */
+#define IRQ_S_TIMER 5   /* S模式时钟中断索引 */
+#define IRQ_M_TIMER 7   /* M模式时钟中断索引 */
+#define IRQ_S_SEIP  9   /* M模式外部中断索引 */
+
+/* mip bit[1] SSIP字段：控制软件中断注入*/
+#define MIP_SSIP (1UL << IRQ_S_SOFT)
+/* mip bit[5] STIP字段：控制S模式时钟中断注入*/
+#define MIP_STIP (1UL << IRQ_S_TIMER)
+/* mip bit[7] MTIP字段：控制M模式时钟中断注入*/
+#define MIP_MTIP (1UL << IRQ_M_TIMER)
+/* mip bit[9] SEIP字段：控制外部中断注入*/
+#define MIP_SEIP (1UL << IRQ_S_SEIP)
+
+
+/* mie bit[5] STIE字段：M模式控制S模式的时钟中断 */
+#define MIE_STIE (1UL << IRQ_S_TIMER)
+/* mie bit[7] MTIE字段：控制M模式时钟中断 */
+#define MIE_MTIE (1UL << IRQ_M_TIMER)
+
 /**** mideleg寄存器字段，用来设置中断委托 ****/
 /* SSIP字段：将软件中断委托给S模式 */
 #define IRQ_SSIP_SOFT 0x1

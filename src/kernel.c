@@ -2,6 +2,7 @@
 #include "memset.h"
 #include "asm/sbi.h"
 #include "printk.h"
+#include "asm/irq.h"
 
 extern void load_store_test(void);
 extern void load_test(void);
@@ -82,9 +83,11 @@ void kernel_main(void)
 	// trigger_fault();
 
 	/* 系统调用实现串口输入 */
-	sbi_inputchar();
+	//sbi_inputchar();
 
+    timer_init();
 
+    local_irq_enable();
 
 
 

@@ -9,6 +9,9 @@
 #define __arch_getb(a)			(*(volatile unsigned char *)(a))
 #define __arch_putb(v,a)		(*(volatile unsigned char *)(a) = (v))
 
+#define __arch_getq(a)          (*(volatile unsigned long *)(a))
+#define __arch_putq(v,a)        (*(volatile unsigned long *)(a) = (v))
+
 #define dmb()		__asm__ __volatile__ ("" : : : "memory")
 #define __iormb()	dmb()
 #define __iowmb()	dmb()
@@ -18,6 +21,10 @@
 
 #define readb(c)	({ unsigned char  __v = __arch_getb(c); __iormb(); __v; })
 #define writeb(v,c)	({ unsigned char  __v = v; __iowmb(); __arch_putb(__v,c);})
+
+#define readq(c)    ({ unsigned long  __v = __arch_getq(c); __iormb(); __v; })
+#define writeq(v,c) ({ unsigned long  __v = v; __iowmb(); __arch_putq(__v,c);})
+
 #else
 static inline void writel(unsigned int value, unsigned int addr)
 {

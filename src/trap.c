@@ -117,11 +117,26 @@ void trap_handler(struct trap_regs* regs, unsigned long scause)
 
     const struct fault_info* inf;
 
-    printk("%s, scause:0x%lx\n", __func__, scause);
+    /* printk("%s, scause:0x%lx\n", __func__, scause); */
 
     if(is_interrupt_fault(scause)) {
-        /* 中断异常 */
-        // TODO
+        switch(scause & ~SCAUSE_INT)
+        {
+            case INTERRUPT_CAUSE_TIMER:
+                /* 处理时钟中断 */
+                handle_timer_interrupt();
+                break;
+            case INTERRUPT_CAUSE_SOFTWARE:
+                /* TODO: 处理IPI中断 */
+                break;
+            case INTERRUPT_CAUSE_EXTERNAL:
+                /* TODO: 处理IRQ中断 */
+                break;
+            default:
+                printk("unexpected interrupt scause");
+                break;
+
+        }
     }
     else
     {
