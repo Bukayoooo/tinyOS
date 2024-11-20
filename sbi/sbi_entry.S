@@ -48,6 +48,7 @@ sbi_exception_vector:
 	sd x30, PT_T5(sp)
 	sd x31, PT_T6(sp)
 
+	/* 当陷入 M-mode 时，mepc 会被写入导致中断或异常的指令的虚拟地址 */
 	csrr t0, mepc
 	sd t0, PT_MEPC(sp)
 
@@ -57,8 +58,8 @@ sbi_exception_vector:
 	/* 保存sp, M模式的sp */
 	addi t0, sp, PT_SIZE
 	/* 将S模式的sp保存在PT_SP(sp)
-		* M模式的sp，保存在mscratch中
-		*/
+	 * M模式的sp，保存在mscratch中
+	 */
 	csrrw t0, mscratch, t0
 	/* 后面恢复sp，恢复的是S模式的sp */
 	sd t0, PT_SP(sp)
@@ -69,7 +70,8 @@ sbi_exception_vector:
 
 	/* 3. 恢复异常上下文 */
 	ld t0, PT_MEPC(sp)
-    csrw mepc, t0
+    	/* 恢复到异常发生时的地址 */
+	csrw mepc, t0
 
 
 	ld x1, PT_RA(sp)
